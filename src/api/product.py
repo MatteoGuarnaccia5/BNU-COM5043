@@ -1,0 +1,33 @@
+import json
+from database.database import Database
+from products.product import Product
+
+class ProductAPI(Database):
+    def __init__(self):
+        super().__init__()
+
+        self.path = 'products.json'
+        product_data = self.load_data(path=self.path)
+        self.products = [Product(d['id'], d['name'], d['cost'], d['price'], d['stock_count']) for d in product_data]
+
+    def create(self, product: Product) -> Product:
+        self.products.append(product)
+        self.save_data(data=self.products, path=self.path)
+        return product
+
+    def update(self, new_product: Product) -> Product:
+        index = next((i for i, d in enumerate(self.products) if d.id == new_product.id), None)
+        if index is not None:
+            self.products[index] = new_product
+        self.save_data(data=self.products, path=self.path)
+        return new_product
+
+    def list(self) -> list:
+        return self.products
+
+    def get(self, id: str) -> Product:
+        return next((d for d in self.products if d.id == id))
+
+    def delete(self, id: str):
+        self.products = [d for d in self.products if d.id != id]
+        self.save_data(data=self.products, path=self.path)
