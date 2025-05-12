@@ -1,6 +1,7 @@
 
 
 
+from orders.ordersHandler import OrderHandler
 from suppliers.supplierHandler import SupplierHandler
 
 
@@ -33,7 +34,8 @@ class App:
             supplier_handler.supplier_menu()
             # SupplierHandler().supplier_menu()
         elif(choice == 2):
-            print('2')
+            order_handler = OrderHandler()
+            order_handler.order_start()
         elif(choice == 3):
             print('3')
         elif(choice == 4):

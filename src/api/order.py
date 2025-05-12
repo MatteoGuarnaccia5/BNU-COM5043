@@ -1,4 +1,5 @@
 import json
+from typing import cast
 from database.database import Database
 
 from datetime import datetime
@@ -13,7 +14,7 @@ class OrderAPI(Database):
         super().__init__()
         self.path = 'orders.json'
         order_data = self.load_data(path=self.path)
-        self.orders = []
+        self.orders: list[Order] = []
         for d in order_data:
             order_date = datetime.strptime(d["order_date"].split('T')[0], '%Y-%m-%d')
 
@@ -34,8 +35,11 @@ class OrderAPI(Database):
         self.save_data(data=self.orders, path=self.path)
         return new_order
 
-    def list(self) -> list:
-        return self.orders
+    def listSupplierOrders(self) -> list[SupplierOrder]:
+        return cast(list[SupplierOrder], list(filter(lambda o: isinstance(o, SupplierOrder), self.orders)))
+
+    def listCustomerOrders(self) -> list[CustomerOrder]:
+        return cast(list[CustomerOrder], list(filter(lambda o: isinstance(o, CustomerOrder), self.orders)))
 
     def get(self, id: str) -> Order:
         return next((d for d in self.orders if d.id == id))
