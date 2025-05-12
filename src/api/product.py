@@ -8,7 +8,7 @@ class ProductAPI(Database):
 
         self.path = 'products.json'
         product_data = self.load_data(path=self.path)
-        self.products = [Product(d['id'], d['name'], d['cost'], d['price'], d['stock_count']) for d in product_data]
+        self.products = [Product(d['id'], d['name'], d['cost'], d['price'], d['stock_count'], d["supplier_id"]) for d in product_data]
 
     def create(self, product: Product) -> Product:
         self.products.append(product)
@@ -24,6 +24,9 @@ class ProductAPI(Database):
 
     def list(self) -> list:
         return self.products
+    
+    def listSupplierProducts(self, supplierId):
+        return [p for p in self.products if p.supplier_id == supplierId]
 
     def get(self, id: str) -> Product:
         return next((d for d in self.products if d.id == id))

@@ -15,9 +15,10 @@ class OrderAPI(Database):
         order_data = self.load_data(path=self.path)
         self.orders = []
         for d in order_data:
-            order_date = datetime.strptime(d['order_date'], '%Y-%m-%d')
+            order_date = datetime.strptime(d["order_date"].split('T')[0], '%Y-%m-%d')
+
             if d.get('supplier_id') is not None:
-                self.orders.append(SupplierOrder(d['id'], d['product_id'], d['quantity'], order_date, d['supplier_id'], d['cost']))
+                self.orders.append(SupplierOrder(d['id'], d['product_id'], d['quantity'], order_date, d['supplier_id'], d['cost'], d["status"]))
             else:
                 self.orders.append(CustomerOrder(d['id'], d['product_id'], d['quantity'], order_date, d['customer_id'], d['price']))
 
@@ -26,7 +27,7 @@ class OrderAPI(Database):
         self.save_data(data=self.orders, path=self.path)
         return order
 
-    def update(self, new_order: Order) -> Order:
+    def update(self, new_order: SupplierOrder | CustomerOrder) -> Order:
         index = next((i for i, d in enumerate(self.orders) if d.id == new_order.id), None)
         if index is not None:
             self.orders[index] = new_order

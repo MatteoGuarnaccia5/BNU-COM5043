@@ -13,7 +13,7 @@ class App:
         Main menu. 
             Select an option:
                 1. View Suppliers.
-                2. View Products.
+                2. Manage orders.
                 3. Manage stock levels.
                 4. Financial reports.
                 5. Exit.

@@ -1,1 +1,32 @@
-[{"id": "1", "name": "Supplier 1", "phone_num": 2000000001, "email": "supplier1@example.com"}, {"id": "2", "name": "Supplier 2", "phone_num": 2000000002, "email": "supplier2@example.com"}, {"id": "3", "name": "Supplier 3", "phone_num": 2000000003, "email": "supplier3@example.com"}, {"id": "4", "name": "Supplier 4", "phone_num": 2000000004, "email": "supplier4@example.com"}, {"id": "5", "name": "Supplier 5", "phone_num": 2000000005, "email": "supplier5@example.com"}]
+[
+  {
+    "id": "1",
+    "name": "Supplier 1",
+    "phone_num": 2000000001,
+    "email": "supplier1@example.com"
+  },
+  {
+    "id": "2",
+    "name": "Supplier 2",
+    "phone_num": 2000000002,
+    "email": "supplier2@example.com"
+  },
+  {
+    "id": "3",
+    "name": "Supplier 3",
+    "phone_num": 2000000003,
+    "email": "supplier3@example.com"
+  },
+  {
+    "id": "4",
+    "name": "Supplier 4",
+    "phone_num": 2000000004,
+    "email": "supplier4@example.com"
+  },
+  {
+    "id": "5",
+    "name": "Supplier 5",
+    "phone_num": 2000000005,
+    "email": "supplier5@example.com"
+  }
+]

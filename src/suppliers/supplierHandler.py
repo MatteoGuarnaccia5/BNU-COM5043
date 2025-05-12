@@ -1,10 +1,15 @@
 
+import asyncio
 import uuid
 
 from api.supplier import SupplierAPI
+from api.product import ProductAPI
+from api.order import OrderAPI
+from orders.supplier_order import SupplierOrder
+from orders.order import Order
 from suppliers.supplier import Supplier
-
-
+from typing import cast
+from datetime import datetime
 class SupplierHandler():
     def __init__(self) -> None:
         self.api = SupplierAPI()
@@ -44,11 +49,13 @@ class SupplierHandler():
         
         elif(choice == 3):
             sel_sup = self.select_supplier()
+            self.api.delete(sel_sup.id)
+            print('Deleted')
 
         elif(choice == 4):
             sel_sup = self.select_supplier()
-            self.api.delete(sel_sup.id)
-            print('Deleted')
+            self.order_from_supplier(sel_sup)
+            
             
         else: 
             return
@@ -101,5 +108,71 @@ class SupplierHandler():
             else:
                 self.api.create(Supplier(id=str(uuid.uuid4()), name=name, phone_num=phone, email=email))
 
-    # def order_from_supplier(self):
+    def order_from_supplier(self, supplier: Supplier):
+        product_api = ProductAPI()
+        supplier_products = product_api.listSupplierProducts(supplierId=supplier.id)
+        print("Products")
+        print("# | NAME | Cost | Stock |")
+        for index, product in enumerate(supplier_products):
+            print(f"{index+1} | {product.name} | £{product.cost} | {product.stock_count}")
+
+        print('')
+        print('''
+            Menu.
+              1. Order product
+              2. Back
+            ''')
+        validChoice = False
+        while validChoice is not True:
+            try:
+                choice = int(input('Select an option: '))
+                if(0 < choice and choice < 3):
+                    validChoice = True
+                else:
+                    raise Exception # will trigger try except.
+            except:
+                print('Invalid choice. Try again')
+                continue
+        if(choice == 1):
+            try:
+                prod_choice = int(input('Select a Product number: '))
+                if(0 < prod_choice and choice <= len(supplier_products)):
+                    validChoice = True
+                else:
+                    raise Exception # will trigger try except.
+            except:
+                print('Invalid choice')
+                return
+            quant = int(input('Select quantity: '))
+            sel_product = supplier_products[prod_choice - 1]
+            # create new order
+            order_api = OrderAPI()
+            sup_order = SupplierOrder(
+                    id=str(uuid.uuid4()), 
+                    product_id=sel_product.id, 
+                    quantity= quant,
+                    order_date= datetime.now(),
+                    supplier_id=supplier.id,
+                    cost= quant * sel_product.cost,
+                    status= 'processing'
+                )
+            order = cast(SupplierOrder, order_api.create(sup_order))
+            asyncio.run(self.mock_order_status(order=order, order_api=order_api))
+            
+        else: 
+            return
         
+    async def mock_order_status(self, order: SupplierOrder, order_api: OrderAPI):
+        statuses = ["shipped", "delivered"]
+
+        for status in statuses:
+            await asyncio.sleep(5)
+            order.status = status
+            order_api.update(order)
+            
+            print(f'Order status for #{order.id} changed to {order.status}')
+
+
+
+        
+
