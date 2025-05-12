@@ -31,7 +31,7 @@ class OrderHandler:
                 order.status = 'completed'
                 self.api.update(order)
                 product = self.product_api.get(id=order.product_id)
-                product.stock_count =- order.quantity
+                product.stock_count =+ order.quantity
                 self.product_api.update(product)
 
     def display_menu(self):

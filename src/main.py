@@ -2,6 +2,8 @@
 
 
 from orders.ordersHandler import OrderHandler
+from products.productHandler import ProductHandler
+from orders.reportsHandler import ReportHandler
 from suppliers.supplierHandler import SupplierHandler
 
 
@@ -15,8 +17,8 @@ class App:
             Select an option:
                 1. View Suppliers.
                 2. Manage orders.
-                3. Manage stock levels.
-                4. Financial reports.
+                3. Financial reports.
+                4. View products.
                 5. Exit.
         ''')
         validChoice = False
@@ -37,9 +39,11 @@ class App:
             order_handler = OrderHandler()
             order_handler.order_start()
         elif(choice == 3):
-            print('3')
+            report_handler = ReportHandler()
+            report_handler.display_report()
         elif(choice == 4):
-            print('4')
+            product_handler = ProductHandler()
+            product_handler.display_products()
         elif(choice == 5):
             return
         else:

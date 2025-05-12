@@ -28,6 +28,9 @@ class SupplierAPI(Database):
 
     def get(self, id: str) -> Supplier:
         return next((d for d in self.suppliers if d.id == id))
+    
+    def get_supplier_for_product(self, prod_supplier_id) -> Supplier:
+        return next((d for d in self.suppliers if d.id == prod_supplier_id))
 
     def delete(self, id: str):
         self.suppliers = [d for d in self.suppliers if d.id != id]

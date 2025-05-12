@@ -7,6 +7,7 @@ from api.product import ProductAPI
 from api.order import OrderAPI
 from orders.supplier_order import SupplierOrder
 from orders.order import Order
+from products.product import Product
 from suppliers.supplier import Supplier
 from typing import cast
 from datetime import datetime
@@ -146,21 +147,23 @@ class SupplierHandler():
             quant = int(input('Select quantity: '))
             sel_product = supplier_products[prod_choice - 1]
             # create new order
-            order_api = OrderAPI()
-            sup_order = SupplierOrder(
-                    id=str(uuid.uuid4()), 
-                    product_id=sel_product.id, 
-                    quantity= quant,
-                    order_date= datetime.now(),
-                    supplier_id=supplier.id,
-                    cost= quant * sel_product.cost,
-                    status= 'processing'
-                )
-            order = cast(SupplierOrder, order_api.create(sup_order))
-            asyncio.run(self.mock_order_status(order=order, order_api=order_api))
+            self.create_order(supplier=supplier, sel_product=sel_product, quant=quant)
             
         else: 
             return
+    def create_order(self, supplier: Supplier, sel_product: Product, quant: int):
+        order_api = OrderAPI()
+        sup_order = SupplierOrder(
+                id=str(uuid.uuid4()), 
+                product_id=sel_product.id, 
+                quantity= quant,
+                order_date= datetime.now(),
+                supplier_id=supplier.id,
+                cost= quant * sel_product.cost,
+                status= 'processing'
+            )
+        order = cast(SupplierOrder, order_api.create(sup_order))
+        asyncio.run(self.mock_order_status(order=order, order_api=order_api))
         
     async def mock_order_status(self, order: SupplierOrder, order_api: OrderAPI):
         statuses = ["shipped", "delivered"]
