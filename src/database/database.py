@@ -1,0 +1,26 @@
+import json
+import os
+
+
+class Database:
+    def __init__(self) -> None:
+        self.base_dir = os.path.dirname(__file__) 
+        
+    def load_data(self, path):
+        """Load data from database"""
+        try:
+            # pylint: disable=unspecified-encoding
+            with open(os.path.join(self.base_dir, path), "r") as file:
+                return json.load(file)
+            file.close()
+        except FileNotFoundError as e:
+            print('error')
+            print(e)
+            return []
+
+    def save_data(self, data, path) -> None:
+        """Save database"""
+        # pylint: disable=unspecified-encoding
+        with open(os.path.join(self.base_dir, path), "w") as file:
+            json.dump([d.toJson() for d in data], file)
+        file.close()

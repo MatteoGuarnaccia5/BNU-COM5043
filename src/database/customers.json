@@ -1,0 +1,62 @@
+[
+    {
+       "id":"1",
+       "name":"Customer 1",
+       "phone_num":1000000001,
+       "email":"customer1@example.com"
+    },
+    {
+       "id":"2",
+       "name":"Customer 2",
+       "phone_num":1000000002,
+       "email":"customer2@example.com"
+    },
+    {
+       "id":"3",
+       "name":"Customer 3",
+       "phone_num":1000000003,
+       "email":"customer3@example.com"
+    },
+    {
+       "id":"4",
+       "name":"Customer 4",
+       "phone_num":1000000004,
+       "email":"customer4@example.com"
+    },
+    {
+       "id":"5",
+       "name":"Customer 5",
+       "phone_num":1000000005,
+       "email":"customer5@example.com"
+    },
+    {
+       "id":"6",
+       "name":"Customer 6",
+       "phone_num":1000000006,
+       "email":"customer6@example.com"
+    },
+    {
+       "id":"7",
+       "name":"Customer 7",
+       "phone_num":1000000007,
+       "email":"customer7@example.com"
+    },
+    {
+       "id":"8",
+       "name":"Customer 8",
+       "phone_num":1000000008,
+       "email":"customer8@example.com"
+    },
+    {
+       "id":"9",
+       "name":"Customer 9",
+       "phone_num":1000000009,
+       "email":"customer9@example.com"
+    },
+    {
+       "id":"10",
+       "name":"Customer 10",
+       "phone_num":1000000010,
+       "email":"customer10@example.com"
+    }
+ ]
