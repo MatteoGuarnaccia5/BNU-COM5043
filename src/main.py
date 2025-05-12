@@ -13,10 +13,10 @@ class App:
         Main menu. 
             Select an option:
                 1. View Suppliers.
-                2. View Products
-                3. Manage stock levels
-                4. Financial reports
-                5. Exit
+                2. View Products.
+                3. Manage stock levels.
+                4. Financial reports.
+                5. Exit.
         ''')
         validChoice = False
         while validChoice is not True:

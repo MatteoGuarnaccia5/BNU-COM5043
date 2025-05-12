@@ -20,7 +20,10 @@ class Database:
 
     def save_data(self, data, path) -> None:
         """Save database"""
+        try:
         # pylint: disable=unspecified-encoding
-        with open(os.path.join(self.base_dir, path), "w") as file:
-            json.dump([d.toJson() for d in data], file)
-        file.close()
+            with open(os.path.join(self.base_dir, path), "w") as file:
+                json.dump([d.to_json() for d in data], file)
+            file.close()
+        except Exception as e:
+            print(e)

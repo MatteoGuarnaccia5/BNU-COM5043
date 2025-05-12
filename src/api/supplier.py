@@ -5,13 +5,14 @@ from suppliers.supplier import Supplier
 class SupplierAPI(Database):
     def __init__(self):
         super().__init__()
-        
+
         self.path = 'suppliers.json'
         supplier_data = self.load_data(path=self.path)
         self.suppliers = [Supplier(d['id'], d['name'], d['phone_num'], d['email']) for d in supplier_data]
 
     def create(self, supplier: Supplier) -> Supplier:
         self.suppliers.append(supplier)
+        print(self.suppliers)
         self.save_data(data=self.suppliers, path=self.path)
         return supplier
 
