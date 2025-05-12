@@ -9,9 +9,11 @@ from datetime import datetime
 from orders.supplier_order import SupplierOrder
 from api.supplier import SupplierAPI
 from suppliers.supplierHandler import SupplierHandler
+from utils import Utils
 
 class ProductHandler:
     def __init__(self) -> None:
+        self.utils = Utils()
         self.api = ProductAPI()
 
     def display_products(self):
@@ -29,7 +31,12 @@ class ProductHandler:
               3. Back
             ''')
         
-        choice = int(input('Select option: '))
+        choice = self.utils.validate_user_intput(
+            prompt='Select option: ',
+            lower_bound=0,
+            upper_bound=4,
+            error_msg='Invalid option. Try again'
+        )
 
         if(choice == 1):
             sel_product = self.select_product()
@@ -46,17 +53,12 @@ class ProductHandler:
             print(f"ALERT\nProduct {product.name}'s stock is low")
 
     def purchase_product(self, product: Product):
-        validChoice = False
-        while validChoice is not True:
-            try:
-                quant = int(input('Quantity to buy: '))
-                if product.stock_count - quant < 0:
-                    print('Quantity exceeds stock count.')
-                    continue
-                validChoice = True
-            except:
-                print('Invalid choice. Try again')
-                continue
+        quant = self.utils.validate_user_intput(
+            prompt='Quantity to buy: ',
+            lower_bound=0,
+            upper_bound=product.stock_count+1,
+            error_msg='Quantity exceeds stock count'
+        )
 
         order_api = OrderAPI()
         order_api.create(
@@ -74,14 +76,12 @@ class ProductHandler:
         self.check_stock_count(product)
     
     def order_product(self, product: Product):
-        validChoice = False
-        while validChoice is not True:
-            try:
-                quant = int(input('Quantity to buy: '))
-                validChoice = True
-            except:
-                print('Invalid choice. Try again')
-                continue
+        quant = self.utils.validate_user_intput(
+            prompt='Quantity to buy: ',
+            lower_bound=0,
+            upper_bound=product.stock_count+1,
+            error_msg='Quantity exceeds stock count'
+        )
 
         supplier_api = SupplierAPI()
         prod_supplier = supplier_api.get_supplier_for_product(product.supplier_id)
@@ -90,16 +90,11 @@ class ProductHandler:
 
     
     def select_product(self) -> Product:
-        validChoice = False
-        while validChoice is not True:
-            try:
-                choice = int(input('Select a Product number: '))
-                if(0 < choice and choice <= len(self.api.products)):
-                    validChoice = True
-                else:
-                    raise Exception # will trigger try except.
-            except:
-                print('Invalid choice. Try again')
-                continue
+        choice = self.utils.validate_user_intput(
+            prompt='Select a Product number: ',
+            lower_bound=0,
+            upper_bound= len(self.api.products) + 1,
+            error_msg='Invalid choice. Try again'
+        )
         
         return self.api.products[choice - 1]

@@ -11,8 +11,11 @@ from products.product import Product
 from suppliers.supplier import Supplier
 from typing import cast
 from datetime import datetime
+
+from utils import Utils
 class SupplierHandler():
     def __init__(self) -> None:
+        self.utils = Utils()
         self.api = SupplierAPI()
 
     def supplier_menu(self):
@@ -31,17 +34,13 @@ class SupplierHandler():
               4. Make order.
               5. Back
             ''')
-        validChoice = False
-        while validChoice is not True:
-            try:
-                choice = int(input('Select an option: '))
-                if(0 < choice and choice < 5):
-                    validChoice = True
-                else:
-                    raise Exception # will trigger try except.
-            except:
-                print('Invalid choice. Try again')
-                continue
+        choice = self.utils.validate_user_intput(
+            prompt='Select an option: ',
+            lower_bound=0,
+            upper_bound=6,
+            error_msg='Inavalid option. Try again'
+        )
+
         if(choice == 1):
             self.createOrEdit(selectedSupplier=None)
         elif(choice == 2):
@@ -64,17 +63,12 @@ class SupplierHandler():
         self.supplier_menu()
 
     def select_supplier(self) -> Supplier:
-        validChoice = False
-        while validChoice is not True:
-            try:
-                choice = int(input('Select a Supplier number: '))
-                if(0 < choice and choice <= len(self.api.suppliers)):
-                    validChoice = True
-                else:
-                    raise Exception # will trigger try except.
-            except:
-                print('Invalid choice. Try again')
-                continue
+        choice = self.utils.validate_user_intput(
+            prompt='Select a Supplier number: ',
+            lower_bound=0,
+            upper_bound=len(self.api.suppliers) + 1,
+            error_msg='Invalid option. Try again'
+        )
         
         return self.api.suppliers[choice - 1]
 
@@ -123,28 +117,27 @@ class SupplierHandler():
               1. Order product
               2. Back
             ''')
-        validChoice = False
-        while validChoice is not True:
-            try:
-                choice = int(input('Select an option: '))
-                if(0 < choice and choice < 3):
-                    validChoice = True
-                else:
-                    raise Exception # will trigger try except.
-            except:
-                print('Invalid choice. Try again')
-                continue
+        choice = self.utils.validate_user_intput(
+            prompt='Select an option: ',
+            lower_bound=0,
+            upper_bound=3,
+            error_msg='Inavalid option. Try again'
+        )
+
         if(choice == 1):
-            try:
-                prod_choice = int(input('Select a Product number: '))
-                if(0 < prod_choice and choice <= len(supplier_products)):
-                    validChoice = True
-                else:
-                    raise Exception # will trigger try except.
-            except:
-                print('Invalid choice')
-                return
-            quant = int(input('Select quantity: '))
+            prod_choice = self.utils.validate_user_intput(
+                prompt='Select a Product number: ',
+                lower_bound=0,
+                upper_bound=len(supplier_products) + 1,
+                error_msg='Inavalid option. Try again'
+            )
+            while True:
+                try:
+                    quant = int(input('Select quantity: '))
+                    break
+                except:
+                    continue
+
             sel_product = supplier_products[prod_choice - 1]
             # create new order
             self.create_order(supplier=supplier, sel_product=sel_product, quant=quant)

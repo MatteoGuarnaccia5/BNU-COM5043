@@ -8,12 +8,15 @@ from orders.order import Order
 from api.supplier import SupplierAPI
 from orders.customer_order import CustomerOrder
 from api.customer import CustomerAPI
+from utils import Utils
 
 
 class OrderHandler:
     def __init__(self) -> None:
+        self.utils = Utils()
         self.api = OrderAPI()
         self.product_api = ProductAPI()
+        
 
     def order_start(self):
         
@@ -42,7 +45,12 @@ class OrderHandler:
               2. View customer orders
               3. Back
             ''')
-        choice = int(input('Select option: '))
+        choice = self.utils.validate_user_intput(
+            prompt='Select option: ',
+            lower_bound=0,
+            upper_bound=4,
+            error_msg='Invalid option. Try again'
+        )
 
         if(choice == 1):
             self.display_orders(self.api.listSupplierOrders(), True)

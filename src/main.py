@@ -5,10 +5,12 @@ from orders.ordersHandler import OrderHandler
 from products.productHandler import ProductHandler
 from orders.reportsHandler import ReportHandler
 from suppliers.supplierHandler import SupplierHandler
+from utils import Utils
 
 
 class App:
     def __init__(self):
+        self.utils = Utils()
         self.main()
 
     def main(self):
@@ -21,15 +23,14 @@ class App:
                 4. View products.
                 5. Exit.
         ''')
-        validChoice = False
-        while validChoice is not True:
-            try:
-                choice = int(input('Enter: '))
-            except:
-                print('Invalid option')
-                continue
 
-            validChoice = True
+
+        choice = self.utils.validate_user_intput(
+            prompt='Select option: ',
+            lower_bound=0,
+            upper_bound=6,
+            error_msg='Invalid option. Try again'
+        )
 
         if(choice == 1):
             supplier_handler = SupplierHandler()
@@ -50,6 +51,7 @@ class App:
             print('Option not available. Returning to menu \n')
             
         self.main()
+    
             
 
 
