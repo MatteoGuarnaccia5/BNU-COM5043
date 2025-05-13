@@ -8,6 +8,7 @@ from orders.order import Order
 from api.supplier import SupplierAPI
 from orders.customer_order import CustomerOrder
 from api.customer import CustomerAPI
+from products.productHandler import ProductHandler
 from utils import Utils
 
 
@@ -33,9 +34,9 @@ class OrderHandler(Utils):
             if(accpt == 'y'):
                 order.status = 'completed'
                 self.api.update(order)
+
                 product = self.product_api.get(id=order.product_id)
-                product.stock_count =+ order.quantity
-                self.product_api.update(product)
+                ProductHandler().update_product_stock_count(product, product.stock_count + order.quantity)
 
     def display_options(self):
         self.display_menu(

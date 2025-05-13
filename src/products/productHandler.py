@@ -76,9 +76,9 @@ class ProductHandler(Utils):
                 price=product.price * quant
             )
         )
-        product.stock_count -= quant
-        self.api.update(product)
-        self.check_stock_count(product)
+
+        self.update_product_stock_count(product, product.stock_count - quant)
+        
     
     def order_product(self, product: Product):
         quant = self.validate_user_intput(
@@ -103,3 +103,8 @@ class ProductHandler(Utils):
         )
         
         return self.api.products[choice - 1]
+    
+    def update_product_stock_count(self, product: Product, new_quantity: int):
+        product.stock_count = new_quantity
+        self.api.update(product)
+        self.check_stock_count(product)
