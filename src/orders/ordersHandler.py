@@ -11,9 +11,9 @@ from api.customer import CustomerAPI
 from utils import Utils
 
 
-class OrderHandler:
+class OrderHandler(Utils):
     def __init__(self) -> None:
-        self.utils = Utils()
+        super().__init__()
         self.api = OrderAPI()
         self.product_api = ProductAPI()
         
@@ -22,7 +22,7 @@ class OrderHandler:
         
         # check for any delivered orders
         self.handle_delivered_orders()
-        self.display_menu()
+        self.display_options()
     
     def handle_delivered_orders(self):
         delivered_orders: list[SupplierOrder] = list(filter(lambda o: o.status == 'delivered', self.api.listSupplierOrders()))
@@ -37,15 +37,16 @@ class OrderHandler:
                 product.stock_count =+ order.quantity
                 self.product_api.update(product)
 
-    def display_menu(self):
-        print('')
-        print('''
-            Menu.
-              1. View orders to suppliers
-              2. View customer orders
-              3. Back
-            ''')
-        choice = self.utils.validate_user_intput(
+    def display_options(self):
+        self.display_menu(
+            'Menu',
+            {
+                1: 'View orders made to suppliers',
+                2: 'View customer orders',
+                3: 'Back'
+            }
+        )
+        choice = self.validate_user_intput(
             prompt='Select option: ',
             lower_bound=0,
             upper_bound=4,
@@ -59,9 +60,10 @@ class OrderHandler:
         else:
             return
         
-        self.display_menu()
+        self.display_options()
     
     def display_orders(self, orders: Sequence[Order], isSupplier: bool):
+        
         if isSupplier:
             print('Orders to suppliers')
             print("# | ID | Date | Product | Total cost | Supplier name")
@@ -79,6 +81,6 @@ class OrderHandler:
                 cus_order = cast(CustomerOrder, order) 
                 name = CustomerAPI().get(cus_order.customer_id).name
                 price = cus_order.price
-            print(f"{index+1} | {order.id} | {order.order_date.strftime('%d/%m%Y')} | {product.name} | {price} | {name}")
+            print(f"{index+1} | {order.id} | {order.order_date.strftime('%d/%m%Y')} | {product.name} | {price:.2f} | {name}")
 
 

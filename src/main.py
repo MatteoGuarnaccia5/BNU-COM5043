@@ -8,24 +8,24 @@ from suppliers.supplierHandler import SupplierHandler
 from utils import Utils
 
 
-class App:
+class App(Utils):
     def __init__(self):
-        self.utils = Utils()
         self.main()
 
     def main(self):
-        print('''
-        Main menu. 
-            Select an option:
-                1. View Suppliers.
-                2. Manage orders.
-                3. Financial reports.
-                4. View products.
-                5. Exit.
-        ''')
+        self.display_menu(
+            'Main menu',
+             {
+                 1: 'View Suppliers',
+                 2: 'Manage orders',
+                 3: 'Financial reports',
+                 4: 'View products',
+                 5: 'Exit'
+             }
+        )
 
 
-        choice = self.utils.validate_user_intput(
+        choice = self.validate_user_intput(
             prompt='Select option: ',
             lower_bound=0,
             upper_bound=6,

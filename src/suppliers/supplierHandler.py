@@ -13,28 +13,35 @@ from typing import cast
 from datetime import datetime
 
 from utils import Utils
-class SupplierHandler():
+class SupplierHandler(Utils):
     def __init__(self) -> None:
-        self.utils = Utils()
+        super().__init__()
         self.api = SupplierAPI()
 
     def supplier_menu(self):
         # self.api.list() # fetch data
-        print("Suppliers")
-        print("# | NAME | Phone # | Email |")
-        for index, supplier in enumerate(self.api.suppliers):
-            print(f"{index+1} | {supplier.name} | {supplier.phone_num} | {supplier.email}")
+        self.display_table(
+            'Suppliers',
+            "# | NAME | PHONE NUMBER | EMAIL |",
+            self.api.suppliers,
+            format_row=[
+                lambda s: f"{s.name}", 
+                lambda s: f"{s.phone_num}", 
+                lambda s: f"{s.email}"
+            ]
+        )
 
-        print('')
-        print('''
-            Menu.
-              1. Create Supplier.
-              2. Update Supplier information.
-              3. Delete Supplier.
-              4. Make order.
-              5. Back
-            ''')
-        choice = self.utils.validate_user_intput(
+        self.display_menu(
+            'Menu',
+            {
+                1: 'Create Supplier',
+                2: 'Update Supplier',
+                3: 'Delete Supplier',
+                4: 'Order from Supplier',
+                5: 'Back'
+            }
+        )
+        choice = self.validate_user_intput(
             prompt='Select an option: ',
             lower_bound=0,
             upper_bound=6,
@@ -63,7 +70,7 @@ class SupplierHandler():
         self.supplier_menu()
 
     def select_supplier(self) -> Supplier:
-        choice = self.utils.validate_user_intput(
+        choice = self.validate_user_intput(
             prompt='Select a Supplier number: ',
             lower_bound=0,
             upper_bound=len(self.api.suppliers) + 1,
@@ -106,18 +113,18 @@ class SupplierHandler():
     def order_from_supplier(self, supplier: Supplier):
         product_api = ProductAPI()
         supplier_products = product_api.listSupplierProducts(supplierId=supplier.id)
-        print("Products")
-        print("# | NAME | Cost | Stock |")
-        for index, product in enumerate(supplier_products):
-            print(f"{index+1} | {product.name} | £{product.cost} | {product.stock_count}")
+        self.display_table(
+            'Products',
+            "# | NAME | COST | STOCK COUNT |",
+            supplier_products,
+            format_row=[
+                lambda p: f"{p.name}", 
+                lambda p: f"£{p.cost:.2f}", 
+                lambda p: f"{p.stock_count}"
+            ]
+        )
 
-        print('')
-        print('''
-            Menu.
-              1. Order product
-              2. Back
-            ''')
-        choice = self.utils.validate_user_intput(
+        choice = self.validate_user_intput(
             prompt='Select an option: ',
             lower_bound=0,
             upper_bound=3,
@@ -125,7 +132,7 @@ class SupplierHandler():
         )
 
         if(choice == 1):
-            prod_choice = self.utils.validate_user_intput(
+            prod_choice = self.validate_user_intput(
                 prompt='Select a Product number: ',
                 lower_bound=0,
                 upper_bound=len(supplier_products) + 1,
@@ -156,17 +163,18 @@ class SupplierHandler():
                 status= 'processing'
             )
         order = cast(SupplierOrder, order_api.create(sup_order))
-        asyncio.run(self.mock_order_status(order=order, order_api=order_api))
+        asyncio.run(self.mock_order_status(order=order, order_api=order_api, product_name=sel_product.name))
         
-    async def mock_order_status(self, order: SupplierOrder, order_api: OrderAPI):
+    async def mock_order_status(self, order: SupplierOrder, order_api: OrderAPI, product_name: str):
         statuses = ["shipped", "delivered"]
 
         for status in statuses:
+            print(f'Order status for {product_name} changed to {order.status}')
             await asyncio.sleep(5)
             order.status = status
             order_api.update(order)
             
-            print(f'Order status for #{order.id} changed to {order.status}')
+            
 
 
 

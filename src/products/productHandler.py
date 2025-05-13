@@ -11,27 +11,33 @@ from api.supplier import SupplierAPI
 from suppliers.supplierHandler import SupplierHandler
 from utils import Utils
 
-class ProductHandler:
+class ProductHandler(Utils):
     def __init__(self) -> None:
-        self.utils = Utils()
+        super().__init__()
         self.api = ProductAPI()
 
     def display_products(self):
+        self.display_table(
+            'Products',
+            "# | NAME | COST | STOCK COUNT |",
+            self.api.products,
+            format_row=[
+                lambda p: f"{p.name}", 
+                lambda p: f"£{p.cost:.2f}", 
+                lambda p: f"{p.stock_count}"
+            ]
+        )
 
-        print("Products")
-        print("# | NAME | Cost | Stock |")
-        for index, product in enumerate(self.api.products):
-            print(f"{index+1} | {product.name} | £{product.cost} | {product.stock_count}")
-
-        print('')
-        print('''
-            Menu.
-              1. Purchase product (client portal)
-              2. Order product
-              3. Back
-            ''')
+        self.display_menu(
+            'Menu',
+            {
+                1: 'Purchase product (client portal)',
+                2: 'Order product',
+                3: 'Back'
+            }
+        )
         
-        choice = self.utils.validate_user_intput(
+        choice = self.validate_user_intput(
             prompt='Select option: ',
             lower_bound=0,
             upper_bound=4,
@@ -53,7 +59,7 @@ class ProductHandler:
             print(f"ALERT\nProduct {product.name}'s stock is low")
 
     def purchase_product(self, product: Product):
-        quant = self.utils.validate_user_intput(
+        quant = self.validate_user_intput(
             prompt='Quantity to buy: ',
             lower_bound=0,
             upper_bound=product.stock_count+1,
@@ -76,7 +82,7 @@ class ProductHandler:
         self.check_stock_count(product)
     
     def order_product(self, product: Product):
-        quant = self.utils.validate_user_intput(
+        quant = self.validate_user_intput(
             prompt='Quantity to buy: ',
             lower_bound=0,
             upper_bound=product.stock_count+1,
@@ -90,7 +96,7 @@ class ProductHandler:
 
     
     def select_product(self) -> Product:
-        choice = self.utils.validate_user_intput(
+        choice = self.validate_user_intput(
             prompt='Select a Product number: ',
             lower_bound=0,
             upper_bound= len(self.api.products) + 1,
