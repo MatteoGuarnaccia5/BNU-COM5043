@@ -20,6 +20,8 @@ class SupplierHandler(Utils):
         self.api = SupplierAPI()
         self.product_api = ProductAPI()
         self.order_api = OrderAPI()
+        self.order_handler = OrderHandler()
+
 
     def supplier_menu(self):
         # self.api.list() # fetch data
@@ -70,7 +72,7 @@ class SupplierHandler(Utils):
         elif(choice == 5):
             sel_sup = self.select_supplier()
             supplier_orders = list(filter(lambda o: o.supplier_id == sel_sup.id, self.order_api.listSupplierOrders()))
-            OrderHandler().display_orders(supplier_orders, True)
+            self.order_handler.display_orders(supplier_orders, True)
             print('\n\n')
             
         else: 
@@ -121,6 +123,10 @@ class SupplierHandler(Utils):
     def order_from_supplier(self, supplier: Supplier):
         
         supplier_products = self.product_api.listSupplierProducts(supplierId=supplier.id)
+        if(len(supplier_products) == 0):
+            print('No products')
+            return
+        
         self.display_table(
             'Products',
             "# | NAME | COST | STOCK COUNT |",
@@ -130,6 +136,14 @@ class SupplierHandler(Utils):
                 lambda p: f"£{p.cost:.2f}", 
                 lambda p: f"{p.stock_count}"
             ]
+        )
+
+        self.display_menu(
+            'Menu',
+            {
+                1: 'Order a product',
+                2: 'Back'
+            }
         )
 
         choice = self.validate_user_intput(
@@ -155,32 +169,13 @@ class SupplierHandler(Utils):
 
             sel_product = supplier_products[prod_choice - 1]
             # create new order
-            self.create_order(supplier=supplier, sel_product=sel_product, quant=quant)
+            self.order_handler.create_order(supplier=supplier, sel_product=sel_product, quant=quant)
             
         else: 
             return
-    def create_order(self, supplier: Supplier, sel_product: Product, quant: int):
+    
         
-        sup_order = SupplierOrder(
-                id=str(uuid.uuid4()), 
-                product_id=sel_product.id, 
-                quantity= quant,
-                order_date= datetime.now(),
-                supplier_id=supplier.id,
-                cost= quant * sel_product.cost,
-                status= 'processing'
-            )
-        order = cast(SupplierOrder, self.order_api.create(sup_order))
-        asyncio.run(self.mock_order_status(order=order, order_api=self.order_api, product_name=sel_product.name))
-        
-    async def mock_order_status(self, order: SupplierOrder, order_api: OrderAPI, product_name: str):
-        statuses = ["shipped", "delivered"]
-
-        for status in statuses:
-            print(f'Order status for {product_name} changed to {order.status}')
-            await asyncio.sleep(5)
-            order.status = status
-            order_api.update(order)
+    
             
             
 

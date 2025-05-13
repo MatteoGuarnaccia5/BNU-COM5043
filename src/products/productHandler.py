@@ -7,13 +7,14 @@ from orders.customer_order import CustomerOrder
 from datetime import datetime
 
 from api.supplier import SupplierAPI
-from suppliers.supplierHandler import SupplierHandler
+from orders.ordersHandler import OrderHandler
 from utils import Utils
 
 class ProductHandler(Utils):
     def __init__(self) -> None:
         super().__init__()
         self.api = ProductAPI()
+        self.order_handler = OrderHandler()
 
     def display_products(self):
         self.display_table(
@@ -51,11 +52,9 @@ class ProductHandler(Utils):
             self.order_product(sel_product)
         else:
             return
+        
+        self.display_products()
 
-
-    def check_stock_count(self, product: Product):
-        if(product.stock_count <= 10):
-            print(f"ALERT\nProduct {product.name}'s stock is low")
 
     def purchase_product(self, product: Product):
         quant = self.validate_user_intput(
@@ -77,21 +76,22 @@ class ProductHandler(Utils):
             )
         )
 
-        self.update_product_stock_count(product, product.stock_count - quant)
+        self.api.update_product_stock_count(product, product.stock_count - quant)
+        self.api.check_stock_count(product)
         
     
     def order_product(self, product: Product):
         quant = self.validate_user_intput(
             prompt='Quantity to buy: ',
             lower_bound=0,
-            upper_bound=product.stock_count+1,
-            error_msg='Quantity exceeds stock count'
+            upper_bound=100,
+            error_msg='Quantity exceeds allowed value'
         )
 
         supplier_api = SupplierAPI()
         prod_supplier = supplier_api.get_supplier_for_product(product.supplier_id)
 
-        SupplierHandler().create_order(sel_product=product, supplier=prod_supplier, quant=quant)
+        self.order_handler.create_order(sel_product=product, supplier=prod_supplier, quant=quant)
 
     
     def select_product(self) -> Product:
@@ -103,8 +103,5 @@ class ProductHandler(Utils):
         )
         
         return self.api.products[choice - 1]
+
     
-    def update_product_stock_count(self, product: Product, new_quantity: int):
-        product.stock_count = new_quantity
-        self.api.update(product)
-        self.check_stock_count(product)

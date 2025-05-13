@@ -1,6 +1,8 @@
 
 
+import asyncio
 from typing import Sequence, cast
+import uuid
 from api.order import OrderAPI
 from api.product import ProductAPI
 from orders.supplier_order import SupplierOrder
@@ -8,8 +10,10 @@ from orders.order import Order
 from api.supplier import SupplierAPI
 from orders.customer_order import CustomerOrder
 from api.customer import CustomerAPI
-from products.productHandler import ProductHandler
+from products.product import Product
+from suppliers.supplier import Supplier
 from utils import Utils
+from datetime import datetime
 
 
 class OrderHandler(Utils):
@@ -36,7 +40,8 @@ class OrderHandler(Utils):
                 self.api.update(order)
 
                 product = self.product_api.get(id=order.product_id)
-                ProductHandler().update_product_stock_count(product, product.stock_count + order.quantity)
+                self.product_api.update_product_stock_count(product, product.stock_count + order.quantity)
+                self.product_api.check_stock_count(product)
 
     def display_options(self):
         self.display_menu(
@@ -56,7 +61,7 @@ class OrderHandler(Utils):
 
         if(choice == 1):
             self.display_orders(self.api.listSupplierOrders(), True)
-        if(choice == 2):
+        elif(choice == 2):
             self.display_orders(self.api.listCustomerOrders(), False)
         else:
             return
@@ -84,4 +89,31 @@ class OrderHandler(Utils):
                 price = cus_order.price
             print(f"{index+1} | {order.id} | {order.order_date.strftime('%d/%m/%Y')} | {product.name} | {price:.2f} | {name}")
 
+    def create_order(self, supplier: Supplier, sel_product: Product, quant: int):
+        
+        sup_order = SupplierOrder(
+                id=str(uuid.uuid4()), 
+                product_id=sel_product.id, 
+                quantity= quant,
+                order_date= datetime.now(),
+                supplier_id=supplier.id,
+                cost= quant * sel_product.cost,
+                status= 'processing'
+            )
+        order = cast(SupplierOrder, self.api.create(sup_order))
+        asyncio.run(self.mock_order_status(order=order, product_name=sel_product.name))
+
+    
+
+    async def mock_order_status(self, order: SupplierOrder, product_name: str):
+        statuses = ["shipped", "delivered"]
+        print(f'Order status for {product_name} changed to {order.status}')
+
+        for status in statuses:
+            await asyncio.sleep(5)
+            order.status = status
+            self.api.update(order)
+            print(f'Order status for {product_name} changed to {order.status}')
+
+    
 
