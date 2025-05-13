@@ -6,7 +6,6 @@ from api.order import OrderAPI
 from orders.customer_order import CustomerOrder
 from datetime import datetime
 
-from orders.supplier_order import SupplierOrder
 from api.supplier import SupplierAPI
 from suppliers.supplierHandler import SupplierHandler
 from utils import Utils

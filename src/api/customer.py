@@ -7,7 +7,7 @@ class CustomerAPI(Database):
         super().__init__()
         self.path = 'customers.json'
         customer_data = self.load_data(self.path)
-        self.customers = [Customer(d['id'], d['name'], d['phone_num'], d['email']) for d in customer_data]
+        self.customers: list[Customer]  = [Customer(d['id'], d['name'], d['phone_num'], d['email']) for d in customer_data]
 
     def create(self, customer: Customer) -> Customer:
         self.customers.append(customer)
@@ -21,7 +21,7 @@ class CustomerAPI(Database):
         self.save_data(data=self.customers, path=self.path)
         return new_customer
 
-    def list(self) -> list:
+    def list(self) -> list[Customer]:
         return self.customers
 
     def get(self, id: str) -> Customer:

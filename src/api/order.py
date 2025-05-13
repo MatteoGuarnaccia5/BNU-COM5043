@@ -44,6 +44,6 @@ class OrderAPI(Database):
     def get(self, id: str) -> Order:
         return next((d for d in self.orders if d.id == id))
 
-    def delete(self, id: str):
+    def delete(self, id: str) -> None:
         self.orders = [d for d in self.orders if d.id != id]
         self.save_data(data=self.orders, path=self.path)

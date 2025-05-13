@@ -1,12 +1,13 @@
 import json
 import os
+from typing import Any
 
 
 class Database:
     def __init__(self) -> None:
         self.base_dir = os.path.dirname(__file__) 
         
-    def load_data(self, path):
+    def load_data(self, path) -> list[Any]:
         """Load data from database"""
         try:
             # pylint: disable=unspecified-encoding
@@ -14,7 +15,6 @@ class Database:
                 return json.load(file)
             file.close()
         except FileNotFoundError as e:
-            print('error')
             print(e)
             return []
 

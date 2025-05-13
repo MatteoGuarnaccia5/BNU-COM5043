@@ -8,7 +8,7 @@ class SupplierAPI(Database):
 
         self.path = 'suppliers.json'
         supplier_data = self.load_data(path=self.path)
-        self.suppliers = [Supplier(d['id'], d['name'], d['phone_num'], d['email']) for d in supplier_data]
+        self.suppliers: list[Supplier] = [Supplier(d['id'], d['name'], d['phone_num'], d['email']) for d in supplier_data]
 
     def create(self, supplier: Supplier) -> Supplier:
         self.suppliers.append(supplier)
@@ -23,7 +23,7 @@ class SupplierAPI(Database):
         self.save_data(data=self.suppliers, path=self.path)
         return new_supplier
 
-    def list(self) -> list:
+    def list(self) -> list[Supplier]:
         return self.suppliers
 
     def get(self, id: str) -> Supplier:
