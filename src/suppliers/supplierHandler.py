@@ -8,6 +8,7 @@ from api.order import OrderAPI
 from orders.supplier_order import SupplierOrder
 from orders.order import Order
 from products.product import Product
+from orders.ordersHandler import OrderHandler
 from suppliers.supplier import Supplier
 from typing import cast
 from datetime import datetime
@@ -17,6 +18,8 @@ class SupplierHandler(Utils):
     def __init__(self) -> None:
         super().__init__()
         self.api = SupplierAPI()
+        self.product_api = ProductAPI()
+        self.order_api = OrderAPI()
 
     def supplier_menu(self):
         # self.api.list() # fetch data
@@ -38,13 +41,14 @@ class SupplierHandler(Utils):
                 2: 'Update Supplier',
                 3: 'Delete Supplier',
                 4: 'Order from Supplier',
-                5: 'Back'
+                5: 'View Supplier orders',
+                6: 'Back'
             }
         )
         choice = self.validate_user_intput(
             prompt='Select an option: ',
             lower_bound=0,
-            upper_bound=6,
+            upper_bound=7,
             error_msg='Inavalid option. Try again'
         )
 
@@ -62,7 +66,12 @@ class SupplierHandler(Utils):
         elif(choice == 4):
             sel_sup = self.select_supplier()
             self.order_from_supplier(sel_sup)
-            
+
+        elif(choice == 5):
+            sel_sup = self.select_supplier()
+            supplier_orders = list(filter(lambda o: o.supplier_id == sel_sup.id, self.order_api.listSupplierOrders()))
+            OrderHandler().display_orders(supplier_orders, True)
+            print('\n\n')
             
         else: 
             return
@@ -101,7 +110,6 @@ class SupplierHandler(Utils):
         confirm: str  = input('Confirm action (y/n) ')
         print(confirm)
         if(confirm == 'y'):
-            print('herer')
             if(isEditing):
                 selectedSupplier.email = email
                 selectedSupplier.phone_num = phone
@@ -111,8 +119,8 @@ class SupplierHandler(Utils):
                 self.api.create(Supplier(id=str(uuid.uuid4()), name=name, phone_num=phone, email=email))
 
     def order_from_supplier(self, supplier: Supplier):
-        product_api = ProductAPI()
-        supplier_products = product_api.listSupplierProducts(supplierId=supplier.id)
+        
+        supplier_products = self.product_api.listSupplierProducts(supplierId=supplier.id)
         self.display_table(
             'Products',
             "# | NAME | COST | STOCK COUNT |",
@@ -152,7 +160,7 @@ class SupplierHandler(Utils):
         else: 
             return
     def create_order(self, supplier: Supplier, sel_product: Product, quant: int):
-        order_api = OrderAPI()
+        
         sup_order = SupplierOrder(
                 id=str(uuid.uuid4()), 
                 product_id=sel_product.id, 
@@ -162,8 +170,8 @@ class SupplierHandler(Utils):
                 cost= quant * sel_product.cost,
                 status= 'processing'
             )
-        order = cast(SupplierOrder, order_api.create(sup_order))
-        asyncio.run(self.mock_order_status(order=order, order_api=order_api, product_name=sel_product.name))
+        order = cast(SupplierOrder, self.order_api.create(sup_order))
+        asyncio.run(self.mock_order_status(order=order, order_api=self.order_api, product_name=sel_product.name))
         
     async def mock_order_status(self, order: SupplierOrder, order_api: OrderAPI, product_name: str):
         statuses = ["shipped", "delivered"]

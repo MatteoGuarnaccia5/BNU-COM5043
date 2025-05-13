@@ -81,6 +81,6 @@ class OrderHandler(Utils):
                 cus_order = cast(CustomerOrder, order) 
                 name = CustomerAPI().get(cus_order.customer_id).name
                 price = cus_order.price
-            print(f"{index+1} | {order.id} | {order.order_date.strftime('%d/%m%Y')} | {product.name} | {price:.2f} | {name}")
+            print(f"{index+1} | {order.id} | {order.order_date.strftime('%d/%m/%Y')} | {product.name} | {price:.2f} | {name}")
 
 
