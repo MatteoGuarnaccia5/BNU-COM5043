@@ -1,6 +1,6 @@
 import json
-from database.database import Database
-from suppliers.supplier import Supplier
+from src.database.database import Database
+from src.suppliers.supplier import Supplier
 
 class SupplierAPI(Database):
     def __init__(self):

@@ -16,3 +16,7 @@ class Product:
             'stock_count': self.stock_count,
             'supplier_id': self.supplier_id
         }
+    
+    def check_stock_count(self):
+        if(self.stock_count <= 10):
+            print(f"ALERT\nProduct {self.name}'s stock is low")

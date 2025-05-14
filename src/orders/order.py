@@ -7,5 +7,5 @@ class Order:
         self.quantity = quantity
         self.order_date = order_date
 
-    # Future method:
-    # def update_stock(self): pass
+    
+    

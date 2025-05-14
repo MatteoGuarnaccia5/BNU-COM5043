@@ -1,12 +1,12 @@
 import json
 from typing import cast
-from database.database import Database
+from src.database.database import Database
 
 from datetime import datetime
 
-from orders.customer_order import CustomerOrder
-from orders.order import Order
-from orders.supplier_order import SupplierOrder
+from src.orders.customer_order import CustomerOrder
+from src.orders.order import Order
+from src.orders.supplier_order import SupplierOrder
 
 
 class OrderAPI(Database):

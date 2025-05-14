@@ -2,18 +2,18 @@
 import asyncio
 import uuid
 
-from api.supplier import SupplierAPI
-from api.product import ProductAPI
-from api.order import OrderAPI
-from orders.supplier_order import SupplierOrder
-from orders.order import Order
-from products.product import Product
-from orders.ordersHandler import OrderHandler
-from suppliers.supplier import Supplier
+from src.api.supplier import SupplierAPI
+from src.api.product import ProductAPI
+from src.api.order import OrderAPI
+from src.orders.supplier_order import SupplierOrder
+from src.orders.order import Order
+from src.products.product import Product
+from src.orders.ordersHandler import OrderHandler
+from src.suppliers.supplier import Supplier
 from typing import cast
 from datetime import datetime
 
-from utils import Utils
+from src.utils import Utils
 class SupplierHandler(Utils):
     def __init__(self) -> None:
         super().__init__()
@@ -42,7 +42,7 @@ class SupplierHandler(Utils):
                 1: 'Create Supplier',
                 2: 'Update Supplier',
                 3: 'Delete Supplier',
-                4: 'Order from Supplier',
+                4: 'Order from src.Supplier',
                 5: 'View Supplier orders',
                 6: 'Back'
             }

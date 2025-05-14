@@ -8,7 +8,7 @@ class Database:
         self.base_dir = os.path.dirname(__file__) 
         
     def load_data(self, path) -> list[Any]:
-        """Load data from database"""
+        """Load data from src.database"""
         try:
             # pylint: disable=unspecified-encoding
             with open(os.path.join(self.base_dir, path), "r") as file:

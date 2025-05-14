@@ -1,6 +1,6 @@
 import json
-from database.database import Database
-from customers.customer import Customer
+from src.database.database import Database
+from src.customers.customer import Customer
 
 class CustomerAPI(Database):
     def __init__(self):

@@ -1,11 +1,11 @@
 
 
 
-from orders.ordersHandler import OrderHandler
-from products.productHandler import ProductHandler
-from orders.reportsHandler import ReportHandler
-from suppliers.supplierHandler import SupplierHandler
-from utils import Utils
+from src.orders.ordersHandler import OrderHandler
+from src.products.productHandler import ProductHandler
+from src.orders.reportsHandler import ReportHandler
+from src.suppliers.supplierHandler import SupplierHandler
+from src.utils import Utils
 
 
 class App(Utils):

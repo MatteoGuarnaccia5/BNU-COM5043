@@ -1,14 +1,14 @@
 
 import uuid
-from api.product import ProductAPI
-from products.product import Product
-from api.order import OrderAPI
-from orders.customer_order import CustomerOrder
+from src.api.product import ProductAPI
+from src.products.product import Product
+from src.api.order import OrderAPI
+from src.orders.customer_order import CustomerOrder
 from datetime import datetime
 
-from api.supplier import SupplierAPI
-from orders.ordersHandler import OrderHandler
-from utils import Utils
+from src.api.supplier import SupplierAPI
+from src.orders.ordersHandler import OrderHandler
+from src.utils import Utils
 
 class ProductHandler(Utils):
     def __init__(self) -> None:
@@ -77,7 +77,7 @@ class ProductHandler(Utils):
         )
 
         self.api.update_product_stock_count(product, product.stock_count - quant)
-        self.api.check_stock_count(product)
+        product.check_stock_count()
         
     
     def order_product(self, product: Product):

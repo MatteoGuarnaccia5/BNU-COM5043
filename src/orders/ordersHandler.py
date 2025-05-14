@@ -3,16 +3,16 @@
 import asyncio
 from typing import Sequence, cast
 import uuid
-from api.order import OrderAPI
-from api.product import ProductAPI
-from orders.supplier_order import SupplierOrder
-from orders.order import Order
-from api.supplier import SupplierAPI
-from orders.customer_order import CustomerOrder
-from api.customer import CustomerAPI
-from products.product import Product
-from suppliers.supplier import Supplier
-from utils import Utils
+from src.api.order import OrderAPI
+from src.api.product import ProductAPI
+from src.orders.supplier_order import SupplierOrder
+from src.orders.order import Order
+from src.api.supplier import SupplierAPI
+from src.orders.customer_order import CustomerOrder
+from src.api.customer import CustomerAPI
+from src.products.product import Product
+from src.suppliers.supplier import Supplier
+from src.utils import Utils
 from datetime import datetime
 
 
@@ -41,7 +41,7 @@ class OrderHandler(Utils):
 
                 product = self.product_api.get(id=order.product_id)
                 self.product_api.update_product_stock_count(product, product.stock_count + order.quantity)
-                self.product_api.check_stock_count(product)
+                product.check_stock_count()
 
     def display_options(self):
         self.display_menu(
