@@ -37,9 +37,9 @@ class ReportHandler(OrderHandler):
         
         self.display_options()
 
-    def calc_stock_costs(self):
+    def calc_stock_costs(self) -> float:
         return sum([order.cost for order in self.api.listSupplierOrders()])
 
-    def calc_sales_revenue(self):
+    def calc_sales_revenue(self) -> float:
         return sum([order.price for order in self.api.listCustomerOrders()])
         

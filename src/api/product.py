@@ -38,6 +38,10 @@ class ProductAPI(Database):
     def update_product_stock_count(self, product: Product, new_quantity: int):
         product.stock_count = new_quantity
         self.update(product)
+
+    def check_stock_count(self, product: Product):
+        if(product.stock_count <= 10):
+            print(f"ALERT\nProduct {product.name}'s stock is low")
         
     
         

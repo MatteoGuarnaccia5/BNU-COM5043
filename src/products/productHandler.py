@@ -71,13 +71,13 @@ class ProductHandler(Utils):
                 product_id=product.id,
                 quantity=quant,
                 order_date=datetime.now(),
-                customer_id='1', # for sake of argument
+                customer_id='1', # for simulation
                 price=product.price * quant
             )
         )
 
         self.api.update_product_stock_count(product, product.stock_count - quant)
-        product.check_stock_count()
+        self.api.check_stock_count(product=product)
         
     
     def order_product(self, product: Product):
@@ -103,5 +103,3 @@ class ProductHandler(Utils):
         )
         
         return self.api.products[choice - 1]
-
-    

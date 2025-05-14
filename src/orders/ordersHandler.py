@@ -41,7 +41,7 @@ class OrderHandler(Utils):
 
                 product = self.product_api.get(id=order.product_id)
                 self.product_api.update_product_stock_count(product, product.stock_count + order.quantity)
-                product.check_stock_count()
+                self.product_api.check_stock_count(product)
 
     def display_options(self):
         self.display_menu(

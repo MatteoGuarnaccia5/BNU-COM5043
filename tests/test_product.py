@@ -2,6 +2,7 @@
 
 from src.api.product import ProductAPI
 from src.products.product import Product
+from src.products.productHandler import ProductHandler
 
 TEST_PRODUCT = Product(
     id='11',
@@ -38,7 +39,7 @@ def test_delete_product():
     assert list(filter(lambda s: s.id == TEST_PRODUCT.id, ProductAPI().products)) == []
 
 def test_check_stock_count(capsys):
-    TEST_PRODUCT.check_stock_count()
+    ProductAPI().check_stock_count(TEST_PRODUCT)
 
     captured = capsys.readouterr()
 

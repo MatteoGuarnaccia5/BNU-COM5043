@@ -1,8 +1,10 @@
 
 
+from unittest.mock import patch
 from src.api.order import OrderAPI
 from src.api.supplier import SupplierAPI
 from src.orders.customer_order import CustomerOrder
+from src.orders.ordersHandler import OrderHandler
 from src.orders.supplier_order import SupplierOrder
 from src.suppliers.supplier import Supplier
 from src.suppliers.supplierHandler import SupplierHandler
@@ -24,7 +26,7 @@ TEST_CUSTOMER_ORDER = CustomerOrder(
     order_date=datetime.now(),
     product_id='1',
     quantity=10,
-    price=2.5,
+    price=5,
 )
 
 def test_create_supplier_order():
@@ -77,4 +79,3 @@ def test_delete_customer_order():
     assert list(filter(lambda s: s.id == TEST_CUSTOMER_ORDER.id, OrderAPI().orders)) == []
     
 
-    
