@@ -6,7 +6,10 @@ class Utils:
     def __init__(self) -> None:
         pass
 
+    def display_message(self, message: str):
+        print(message)
 
+        
     def display_menu(self, prompt: str, options: dict[int, str]):
         print(prompt)
         for key, label in options.items():

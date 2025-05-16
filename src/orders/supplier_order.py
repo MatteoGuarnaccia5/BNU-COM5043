@@ -9,7 +9,7 @@ class SupplierOrder(Order):
         self.cost = cost
         self.status = status # processing, shipped, delivered, completed
 
-    def to_json(self):
+    def _to_json(self):
         return {
             'id': self.id,
             'product_id': self.product_id,

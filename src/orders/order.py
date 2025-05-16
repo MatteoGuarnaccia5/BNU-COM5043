@@ -7,5 +7,11 @@ class Order:
         self.quantity = quantity
         self.order_date = order_date
 
-    
+    def _to_json(self):
+        return {
+            'id': self.id,
+            'product_id': self.product_id,
+            'quantity': self.quantity,
+            'order_date': self.order_date
+        }
     

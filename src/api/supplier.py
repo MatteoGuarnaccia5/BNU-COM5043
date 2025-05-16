@@ -12,7 +12,6 @@ class SupplierAPI(Database):
 
     def create(self, supplier: Supplier) -> Supplier:
         self.suppliers.append(supplier)
-        print(self.suppliers)
         self.save_data(data=self.suppliers, path=self.path)
         return supplier
 

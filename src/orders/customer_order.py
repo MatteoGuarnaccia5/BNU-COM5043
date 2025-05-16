@@ -8,7 +8,7 @@ class CustomerOrder(Order):
         self.customer_id = customer_id
         self.price = price
 
-    def to_json(self):
+    def _to_json(self):
         return {
             'id': self.id,
             'product_id': self.product_id,

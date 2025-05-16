@@ -45,18 +45,18 @@ class ProductHandler(Utils):
         )
 
         if(choice == 1):
-            sel_product = self.select_product()
-            self.purchase_product(sel_product)
+            sel_product = self._select_product()
+            self._purchase_product(sel_product)
         if(choice == 2):
-            sel_product = self.select_product()
-            self.order_product(sel_product)
+            sel_product = self._select_product()
+            self._order_product(sel_product)
         else:
             return
         
         self.display_products()
 
 
-    def purchase_product(self, product: Product):
+    def _purchase_product(self, product: Product):
         quant = self.validate_user_intput(
             prompt='Quantity to buy: ',
             lower_bound=0,
@@ -77,10 +77,9 @@ class ProductHandler(Utils):
         )
 
         self.api.update_product_stock_count(product, product.stock_count - quant)
-        self.api.check_stock_count(product=product)
         
     
-    def order_product(self, product: Product):
+    def _order_product(self, product: Product):
         quant = self.validate_user_intput(
             prompt='Quantity to buy: ',
             lower_bound=0,
@@ -94,7 +93,7 @@ class ProductHandler(Utils):
         self.order_handler.create_order(sel_product=product, supplier=prod_supplier, quant=quant)
 
     
-    def select_product(self) -> Product:
+    def _select_product(self) -> Product:
         choice = self.validate_user_intput(
             prompt='Select a Product number: ',
             lower_bound=0,

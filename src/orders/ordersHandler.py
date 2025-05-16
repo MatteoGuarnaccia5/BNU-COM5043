@@ -26,10 +26,10 @@ class OrderHandler(Utils):
     def order_start(self):
         
         # check for any delivered orders
-        self.handle_delivered_orders()
+        self._handle_delivered_orders()
         self.display_options()
     
-    def handle_delivered_orders(self):
+    def _handle_delivered_orders(self):
         delivered_orders: list[SupplierOrder] = list(filter(lambda o: o.status == 'delivered', self.api.listSupplierOrders()))
         
 
@@ -41,7 +41,6 @@ class OrderHandler(Utils):
 
                 product = self.product_api.get(id=order.product_id)
                 self.product_api.update_product_stock_count(product, product.stock_count + order.quantity)
-                self.product_api.check_stock_count(product)
 
     def display_options(self):
         self.display_menu(
@@ -60,22 +59,22 @@ class OrderHandler(Utils):
         )
 
         if(choice == 1):
-            self.display_orders(self.api.listSupplierOrders(), True)
+            self._display_orders(self.api.listSupplierOrders(), True)
         elif(choice == 2):
-            self.display_orders(self.api.listCustomerOrders(), False)
+            self._display_orders(self.api.listCustomerOrders(), False)
         else:
             return
         
         self.display_options()
     
-    def display_orders(self, orders: Sequence[Order], isSupplier: bool):
+    def _display_orders(self, orders: Sequence[Order], isSupplier: bool):
         
         if isSupplier:
-            print('Orders to suppliers')
-            print("# | ID | Date | Product | Total cost | Supplier name")
+            self.display_message('Orders to suppliers')
+            self.display_message("# | ID | Date | Product | Total cost | Supplier name")
         else:
-            print('Customer orders')
-            print("# | ID | Date | Product | Total price | Customer name")
+            self.display_message('Customer orders')
+            self.display_message("# | ID | Date | Product | Total price | Customer name")
 
         for index, order in enumerate(orders):
             product = self.product_api.get(order.product_id)
@@ -87,7 +86,7 @@ class OrderHandler(Utils):
                 cus_order = cast(CustomerOrder, order) 
                 name = CustomerAPI().get(cus_order.customer_id).name
                 price = cus_order.price
-            print(f"{index+1} | {order.id} | {order.order_date.strftime('%d/%m/%Y')} | {product.name} | {price:.2f} | {name}")
+            self.display_message(f"{index+1} | {order.id} | {order.order_date.strftime('%d/%m/%Y')} | {product.name} | {price:.2f} | {name}")
 
     def create_order(self, supplier: Supplier, sel_product: Product, quant: int):
         
@@ -101,19 +100,19 @@ class OrderHandler(Utils):
                 status= 'processing'
             )
         order = cast(SupplierOrder, self.api.create(sup_order))
-        asyncio.run(self.mock_order_status(order=order, product_name=sel_product.name))
+        asyncio.run(self._mock_order_status(order=order, product_name=sel_product.name))
 
     
 
-    async def mock_order_status(self, order: SupplierOrder, product_name: str):
+    async def _mock_order_status(self, order: SupplierOrder, product_name: str):
         statuses = ["shipped", "delivered"]
-        print(f'Order status for {product_name} changed to {order.status}')
+        self.display_message(f'Order status for {product_name} changed to {order.status}')
 
         for status in statuses:
             await asyncio.sleep(5)
             order.status = status
             self.api.update(order)
-            print(f'Order status for {product_name} changed to {order.status}')
+            self.display_message(f'Order status for {product_name} changed to {order.status}')
 
     
 

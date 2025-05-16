@@ -10,12 +10,12 @@ class ReportHandler(OrderHandler):
     
     def display_report(self):
         num_orders = len(self.api.listSupplierOrders())
-        total_order_cost = self.calc_stock_costs()
+        total_order_cost = self._calc_stock_costs()
 
         num_cust_orders = len(self.api.listCustomerOrders())
-        total_revenue = self.calc_sales_revenue()
+        total_revenue = self._calc_sales_revenue()
 
-        print(f'''
+        self.display_message(f'''
             Finacial overview and report.
               
               Stock orders:
@@ -37,9 +37,9 @@ class ReportHandler(OrderHandler):
         
         self.display_options()
 
-    def calc_stock_costs(self) -> float:
+    def _calc_stock_costs(self) -> float:
         return sum([order.cost for order in self.api.listSupplierOrders()])
 
-    def calc_sales_revenue(self) -> float:
+    def _calc_sales_revenue(self) -> float:
         return sum([order.price for order in self.api.listCustomerOrders()])
         

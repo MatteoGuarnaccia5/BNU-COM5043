@@ -19,7 +19,6 @@ class SupplierHandler(Utils):
         super().__init__()
         self.api = SupplierAPI()
         self.product_api = ProductAPI()
-        self.order_api = OrderAPI()
         self.order_handler = OrderHandler()
 
 
@@ -55,32 +54,32 @@ class SupplierHandler(Utils):
         )
 
         if(choice == 1):
-            self.createOrEdit(selectedSupplier=None)
+            self._createOrEdit(selectedSupplier=None)
         elif(choice == 2):
-            sel_sup = self.select_supplier()
-            self.createOrEdit(selectedSupplier=sel_sup)
+            sel_sup = self._select_supplier()
+            self._createOrEdit(selectedSupplier=sel_sup)
         
         elif(choice == 3):
-            sel_sup = self.select_supplier()
+            sel_sup = self._select_supplier()
             self.api.delete(sel_sup.id)
-            print('Deleted')
+            self.display_message('Deleted')
 
         elif(choice == 4):
-            sel_sup = self.select_supplier()
-            self.order_from_supplier(sel_sup)
+            sel_sup = self._select_supplier()
+            self._order_from_supplier(sel_sup)
 
         elif(choice == 5):
-            sel_sup = self.select_supplier()
-            supplier_orders = list(filter(lambda o: o.supplier_id == sel_sup.id, self.order_api.listSupplierOrders()))
-            self.order_handler.display_orders(supplier_orders, True)
-            print('\n\n')
+            sel_sup = self._select_supplier()
+            supplier_orders = list(filter(lambda o: o.supplier_id == sel_sup.id, self.order_handler.api.listSupplierOrders()))
+            self.order_handler._display_orders(supplier_orders, True)
+            self.display_message('\n\n')
             
         else: 
             return
         
         self.supplier_menu()
 
-    def select_supplier(self) -> Supplier:
+    def _select_supplier(self) -> Supplier:
         choice = self.validate_user_intput(
             prompt='Select a Supplier number: ',
             lower_bound=0,
@@ -91,13 +90,13 @@ class SupplierHandler(Utils):
         return self.api.suppliers[choice - 1]
 
 
-    def createOrEdit(self, selectedSupplier: Supplier | None ):
+    def _createOrEdit(self, selectedSupplier: Supplier | None ):
         isEditing: bool = selectedSupplier is not None
         if(isEditing):
-            print('Selected Supplier')
-            print(f"| {selectedSupplier.name} | {selectedSupplier.phone_num} | {selectedSupplier.email}")
+            self.display_message('Selected Supplier')
+            self.display_message(f"| {selectedSupplier.name} | {selectedSupplier.phone_num} | {selectedSupplier.email}")
 
-        print('')
+        self.display_message('')
         name = input('Name: ')
         email = input('Email: ')
         while True:
@@ -107,10 +106,10 @@ class SupplierHandler(Utils):
             except:
                 continue
 
-        print('New Supplier')
-        print(f"| {name} | {phone} | {email}")
+        self.display_message('New Supplier')
+        self.display_message(f"| {name} | {phone} | {email}")
         confirm: str  = input('Confirm action (y/n) ')
-        print(confirm)
+        self.display_message(confirm)
         if(confirm == 'y'):
             if(isEditing):
                 selectedSupplier.email = email
@@ -120,11 +119,11 @@ class SupplierHandler(Utils):
             else:
                 self.api.create(Supplier(id=str(uuid.uuid4()), name=name, phone_num=phone, email=email))
 
-    def order_from_supplier(self, supplier: Supplier):
+    def _order_from_supplier(self, supplier: Supplier):
         
         supplier_products = self.product_api.listSupplierProducts(supplierId=supplier.id)
         if(len(supplier_products) == 0):
-            print('No products')
+            self.display_message('No products')
             return
         
         self.display_table(

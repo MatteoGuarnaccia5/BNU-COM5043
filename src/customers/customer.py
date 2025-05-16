@@ -5,14 +5,10 @@ class Customer:
         self.phone_num = phone_num
         self.email = email
 
-    def to_json(self):
+    def _to_json(self):
         return {
             'id': self.id,
             'name': self.name,
             'phone_num': self.phone_num,
             'email': self.email
         }
-
-    # Future methods:
-    # def make_order(self): pass
-    # def get_order_history(self): pass

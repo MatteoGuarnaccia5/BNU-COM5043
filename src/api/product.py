@@ -1,6 +1,7 @@
 import json
 from src.database.database import Database
 from src.products.product import Product
+from src.utils import Utils
 
 class ProductAPI(Database):
     def __init__(self):
@@ -38,10 +39,11 @@ class ProductAPI(Database):
     def update_product_stock_count(self, product: Product, new_quantity: int):
         product.stock_count = new_quantity
         self.update(product)
+        self._check_stock_count(product)
 
-    def check_stock_count(self, product: Product):
+    def _check_stock_count(self, product: Product):
         if(product.stock_count <= 10):
-            print(f"ALERT\nProduct {product.name}'s stock is low")
+            Utils().display_message(f"ALERT\nProduct {product.name}'s stock is low")
         
     
         

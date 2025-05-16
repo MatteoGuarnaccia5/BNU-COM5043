@@ -48,7 +48,7 @@ class App(Utils):
         elif(choice == 5):
             return
         else:
-            print('Option not available. Returning to menu \n')
+            self.display_message('Option not available. Returning to menu \n')
             
         self.main()
     

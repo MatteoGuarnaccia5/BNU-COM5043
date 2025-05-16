@@ -17,4 +17,8 @@ class Product:
             'supplier_id': self.supplier_id
         }
     
+    # need getter and setter methods
+    # make methods private
+    # how much exception handling do we need
+    
     
