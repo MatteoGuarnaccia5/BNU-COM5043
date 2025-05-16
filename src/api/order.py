@@ -41,8 +41,8 @@ class OrderAPI(Database):
     def listCustomerOrders(self) -> list[CustomerOrder]:
         return cast(list[CustomerOrder], list(filter(lambda o: isinstance(o, CustomerOrder), self.orders)))
 
-    def get(self, id: str) -> Order:
-        return next((d for d in self.orders if d.id == id))
+    def get(self, id: str) -> Order | None:
+        return next((d for d in self.orders if d.id == id), None)
 
     def delete(self, id: str) -> None:
         self.orders = [d for d in self.orders if d.id != id]

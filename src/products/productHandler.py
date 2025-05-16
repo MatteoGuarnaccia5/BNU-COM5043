@@ -90,7 +90,10 @@ class ProductHandler(Utils):
         supplier_api = SupplierAPI()
         prod_supplier = supplier_api.get_supplier_for_product(product.supplier_id)
 
-        self.order_handler.create_order(sel_product=product, supplier=prod_supplier, quant=quant)
+        if prod_supplier is None:
+            self.display_message('Unable to order product, could not get supplier information')
+        else:
+            self.order_handler.create_order(sel_product=product, supplier=prod_supplier, quant=quant)
 
     
     def _select_product(self) -> Product:

@@ -29,8 +29,8 @@ class ProductAPI(Database):
     def listSupplierProducts(self, supplierId):
         return [p for p in self.products if p.supplier_id == supplierId]
 
-    def get(self, id: str) -> Product:
-        return next((d for d in self.products if d.id == id))
+    def get(self, id: str) -> Product | None:
+        return next((d for d in self.products if d.id == id), None)
 
     def delete(self, id: str) -> None:
         self.products = [d for d in self.products if d.id != id]

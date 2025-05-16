@@ -40,7 +40,10 @@ class OrderHandler(Utils):
                 self.api.update(order)
 
                 product = self.product_api.get(id=order.product_id)
-                self.product_api.update_product_stock_count(product, product.stock_count + order.quantity)
+                if product is None:
+                    self.display_message('Unable to collect order, could not retrieve product')
+                else:
+                    self.product_api.update_product_stock_count(product, product.stock_count + order.quantity)
 
     def display_options(self):
         self.display_menu(
@@ -78,14 +81,26 @@ class OrderHandler(Utils):
 
         for index, order in enumerate(orders):
             product = self.product_api.get(order.product_id)
+            if product is None:
+                continue
+
             if(isSupplier):
-                sup_order = cast(SupplierOrder, order) 
-                name = SupplierAPI().get(sup_order.supplier_id).name
+
+                sup_order = cast(SupplierOrder, order)
+                supplier = SupplierAPI().get(sup_order.supplier_id)
+                if supplier is None:
+                    continue
+                name = supplier.name
                 price = sup_order.cost
             else:
+
                 cus_order = cast(CustomerOrder, order) 
-                name = CustomerAPI().get(cus_order.customer_id).name
+                customer = CustomerAPI().get(cus_order.customer_id)
+                if customer is None:
+                    continue
+                name = customer.name
                 price = cus_order.price
+
             self.display_message(f"{index+1} | {order.id} | {order.order_date.strftime('%d/%m/%Y')} | {product.name} | {price:.2f} | {name}")
 
     def create_order(self, supplier: Supplier, sel_product: Product, quant: int):

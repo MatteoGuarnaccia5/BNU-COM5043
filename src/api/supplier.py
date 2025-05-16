@@ -25,11 +25,11 @@ class SupplierAPI(Database):
     def list(self) -> list[Supplier]:
         return self.suppliers
 
-    def get(self, id: str) -> Supplier:
-        return next((d for d in self.suppliers if d.id == id))
+    def get(self, id: str) -> Supplier | None:
+        return next((d for d in self.suppliers if d.id == id), None)
     
-    def get_supplier_for_product(self, prod_supplier_id) -> Supplier:
-        return next((d for d in self.suppliers if d.id == prod_supplier_id))
+    def get_supplier_for_product(self, prod_supplier_id) -> Supplier | None:
+        return next((d for d in self.suppliers if d.id == prod_supplier_id), None)
 
     def delete(self, id: str):
         self.suppliers = [d for d in self.suppliers if d.id != id]
