@@ -1,13 +1,7 @@
 
-
-from unittest.mock import patch
 from src.api.order import OrderAPI
-from src.api.supplier import SupplierAPI
 from src.orders.customer_order import CustomerOrder
-from src.orders.ordersHandler import OrderHandler
 from src.orders.supplier_order import SupplierOrder
-from src.suppliers.supplier import Supplier
-from src.suppliers.supplierHandler import SupplierHandler
 from datetime import datetime
 
 TEST_SUPPLIER_ORDER = SupplierOrder(

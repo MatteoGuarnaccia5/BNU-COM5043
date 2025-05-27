@@ -10,9 +10,9 @@ from unittest.mock import patch
 def test_calc_cost():
     with patch("src.api.order.OrderAPI.listSupplierOrders", return_value=[TEST_SUPPLIER_ORDER]*10):
 
-        assert ReportHandler().calc_stock_costs() == 25
+        assert ReportHandler()._calc_stock_costs() == 25
 
 def test_calc_revenue():
     with patch("src.api.order.OrderAPI.listCustomerOrders", return_value=[TEST_CUSTOMER_ORDER]*10):
 
-        assert ReportHandler().calc_sales_revenue() == 50
+        assert ReportHandler()._calc_sales_revenue() == 50

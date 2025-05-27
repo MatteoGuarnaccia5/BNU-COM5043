@@ -39,7 +39,7 @@ def test_delete_product():
     assert list(filter(lambda s: s.id == TEST_PRODUCT.id, ProductAPI().products)) == []
 
 def test_check_stock_count(capsys):
-    ProductAPI().check_stock_count(TEST_PRODUCT)
+    ProductAPI()._check_stock_count(TEST_PRODUCT)
 
     captured = capsys.readouterr()
 

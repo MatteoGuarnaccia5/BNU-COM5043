@@ -15,7 +15,7 @@ TEST_SUPPLIER = Supplier(
 
 def test_select_supplier(monkeypatch):
     monkeypatch.setattr('builtins.input', lambda _: '1')
-    sup = SupplierHandler().select_supplier()
+    sup = SupplierHandler()._select_supplier()
 
     assert sup.id == '1'
 

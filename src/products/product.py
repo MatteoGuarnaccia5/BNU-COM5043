@@ -7,7 +7,7 @@ class Product:
         self.stock_count = stock_count
         self.supplier_id = supplier_id
 
-    def to_json(self):
+    def _to_json(self):
         return {
             'id': self.id,
             'name': self.name,

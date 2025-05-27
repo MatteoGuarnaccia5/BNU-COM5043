@@ -5,7 +5,7 @@ class Supplier:
         self.phone_num = phone_num
         self.email = email
 
-    def to_json(self):
+    def _to_json(self):
         return {
             'id': self.id,
             'name': self.name,
@@ -13,9 +13,3 @@ class Supplier:
             'email': self.email
         }
 
-    def handle_create(self):
-        pass
-
-    # Future methods:
-    # def make_order(self): pass
-    # def get_order_history(self): pass
