@@ -1,4 +1,4 @@
-import json
+
 from src.database.database import Database
 from src.products.product import Product
 from src.utils import Utils
